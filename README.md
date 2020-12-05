@@ -10,4 +10,4 @@ More [here](https://adventofcode.com/2020/about).
 ## Join the Root Ventures Private Leaderboard
 - Sign up for Advent of Code [here](https://adventofcode.com/).
 - Go to: https://adventofcode.com/2020/leaderboard/private
-- Enter code: 986116-bf9b9db8
+- Enter code: `986116-bf9b9db8`
