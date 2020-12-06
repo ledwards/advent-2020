@@ -2,16 +2,19 @@ from @std/app import start, print, exit
 from @std/seq import seq, next
 
 on start {
+  const url = "https://adventofcode.com/2020/day/1/input"
   const expenses = [1721, 979, 366, 299, 675, 1456]
 
   expenses.each(fn (a: int64) {
-    const b = expenses.find(fn (bb: int64): bool = a + bb == 2020)
+    // return type below should be bool, bug with current Alan compiler v0.1.19
+    const b = expenses.find(fn (bb: int64): int64 = a + bb == 2020)
     if b.isOk() {
+      print(a)
       print(b)
-      // const c = a * b
-      // print(c)
+      print(a * b.getOr(0))
+      emit exit 0
     }
   })
 
-  emit exit 0
+  emit exit 1
 }
