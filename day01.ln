@@ -1,0 +1,16 @@
+from @std/app import start, print, exit
+from @std/seq import seq, next
+
+on start {
+  const expenses = [1721, 979, 366, 299, 675, 1456]
+
+  expenses.each(fn (a: int64) {
+    const b = expenses.find(fn (bb: int64) = a + bb == 2020)
+    if b.isOk() {
+      print(b)
+      print(a * b)
+    }
+  })
+
+  emit exit 0
+}
