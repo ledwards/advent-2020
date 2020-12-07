@@ -7,6 +7,9 @@ You don't need a computer science background to participate - just a little prog
 
 More [here](https://adventofcode.com/2020/about).
 
+## My Submissions by Advent Calendar Day
+1. using [Alan v0.1.20](https://alan-lang.org)
+
 ## Join the Root Ventures Private Leaderboard
 - Sign up for Advent of Code [here](https://adventofcode.com/).
 - Go to: https://adventofcode.com/2020/leaderboard/private

@@ -3,20 +3,18 @@ from @std/seq import seq, next
 from @std/http import get
 
 on start {
-  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/day01.txt"
-  // const expenses = [1721, 979, 366, 299, 675, 1456]
-  const expenses = get(url).getOr("").split("\n").map(toInt64)
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/day01.txt";
+  const expenses = get(url).getOr("").trim().split("\n").map(toInt64);
 
   expenses.each(fn (a: int64) {
-    // return type below should be bool, bug with current Alan compiler v0.1.19
-    const b = expenses.find(fn (bb: int64): int64 = a + bb == 2020)
+    const b = expenses.find(fn (bb: int64): bool = a + bb == 2020);
     if b.isOk() {
-      print(a)
-      print(b)
-      print(a * b.getOr(0))
-      emit exit 0
+      print(a);
+      print(b);
+      print(a * b.getOr(0));
+      emit exit 0;
     }
-  })
+  });
 
-  emit exit 1
+  emit exit 0;
 }
