@@ -5,7 +5,7 @@ from @std/http import get
 on start {
   const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/day01.txt"
   // const expenses = [1721, 979, 366, 299, 675, 1456]
-  const expenses = get(url).getOr('').split('\n').map(toInt64)
+  const expenses = get(url).getOr("").split("\n").map(toInt64)
 
   expenses.each(fn (a: int64) {
     // return type below should be bool, bug with current Alan compiler v0.1.19
