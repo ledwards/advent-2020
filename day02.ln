@@ -1,5 +1,4 @@
 from @std/app import start, print, exit
-from @std/seq import seq, next
 from @std/http import get
 
 on start {
@@ -11,9 +10,6 @@ on start {
     expenses.each(fn (b: int64) {
       const c = expenses.find(fn (cc: int64): bool = a + b + cc == 2020);
       if c.isOk() {
-        print(a);
-        print(b);
-        print(c);
         print(a * b * c.getOr(0));
         emit exit 0;
       }
