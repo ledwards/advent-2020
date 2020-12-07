@@ -3,7 +3,7 @@ from @std/seq import seq, next
 from @std/http import get
 
 on start {
-  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/day01.txt";
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/expenses.txt";
   // const expensesTest = [1721, 979, 366, 299, 675, 1456];
   const expenses = get(url).getOr("").trim().split("\n").map(toInt64);
 
