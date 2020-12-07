@@ -10,6 +10,8 @@ More [here](https://adventofcode.com/2020/about).
 ## My Submissions by Advent Calendar Day
 1. Day 1 (Part 1) using [Alan v0.1.20](https://alan-lang.org)
 1. Day 1 (Part 2) using [Alan v0.1.20](https://alan-lang.org) transpiled to JS
+1. Day 2 (Part 1) using [Alan v0.1.20](https://alan-lang.org)
+1. WIP Day 2 (Part 2) using [Alan v0.1.20](https://alan-lang.org)
 
 ## Join the Root Ventures Private Leaderboard
 - Sign up for Advent of Code [here](https://adventofcode.com/).
