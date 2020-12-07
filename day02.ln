@@ -1,0 +1,24 @@
+from @std/app import start, print, exit
+from @std/seq import seq, next
+from @std/http import get
+
+on start {
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/day01.txt";
+  // const expensesTest = [1721, 979, 366, 299, 675, 1456];
+  const expenses = get(url).getOr("").trim().split("\n").map(toInt64);
+
+  expenses.each(fn (a: int64) {
+    expenses.each(fn (b: int64) {
+      const c = expenses.find(fn (cc: int64): bool = a + b + cc == 2020);
+      if c.isOk() {
+        print(a);
+        print(b);
+        print(c);
+        print(a * b * c.getOr(0));
+        emit exit 0;
+      }
+    });
+  });
+
+  emit exit 0;
+}
