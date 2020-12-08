@@ -1,0 +1,30 @@
+from @std/app import start, print, exit
+from @std/http import get
+
+on start {
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/passwords.txt";
+  const lines = get(url).getOr("").trim().split("\n");
+  let validPasswords = 0;
+
+  lines.eachLin(fn (line: string) {
+    const entry = line.split(": ");
+    const rule = entry[0].getOr("").split(" ");
+    const range = rule[0].getOr("").split("-");
+
+    const i = range[0].getOr("").toInt64();
+    const j = range[1].getOr("").toInt64();
+    const letter = rule[1].getOr("");
+    const password = entry[1].getOr("");
+
+    const first = password.split("")[i].getOr("");
+    const last = password.split("")[j].getOr("");
+
+    if (first == letter) ^ (last == letter) {
+      validPasswords = validPasswords + 1;
+    }
+  });
+
+  print(validPasswords);
+
+  emit exit 0;
+}
