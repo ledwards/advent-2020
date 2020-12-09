@@ -1,0 +1,9 @@
+from @std/app import start, print, exit
+from @std/http import get
+
+on start {
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/passports.txt";
+  const lines = get(url).getOr("").split("\n");
+
+  emit exit 0;
+}
