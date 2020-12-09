@@ -8,7 +8,6 @@ on start {
 
   const height = lines.length();
   const width = 31; // can't figure out how to get length to work on lines[n]
-  print(toString(height) + "x" + toString(width));
 
   const m = lines.map(fn (l: string): Array<string> = l.split(""));
 
@@ -21,10 +20,6 @@ on start {
     const currY = i * slopeY;
     const currX = (i * slopeX) % width;
     const pos = m[currY].getOr([""])[currX + 1];
-    print(lines[currY].getOr(""));
-    print(currY.toString() + "," + currX.toString());
-    print(pos.getOr(""));
-    print("\n");
 
     if pos.getOr("").matches("\#") {
       count = count + 1;
