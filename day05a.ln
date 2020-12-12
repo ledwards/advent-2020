@@ -1,0 +1,13 @@
+from @std/app import start, print, exit
+from @std/http import get
+from @std/seq import seq, each
+
+on start {
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/boarding_passes.txt";
+  const res = get(url);
+  const res = "BFFFBBFRRR \nFFFBBBFRRR \nBBFFBBFRLL";
+
+  const passes = res.getOr("").split("\n");
+
+  emit exit 0;
+}
