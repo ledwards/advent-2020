@@ -3,7 +3,31 @@ from @std/http import get
 
 on start {
   const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/passports.txt";
-  const lines = get(url).getOr("").split("\n");
+  const res = get(url);
+
+  const passports = res.getOr("").split("\n\n");
+  let validCount = 0;
+
+  passports.eachLin(fn (passport: string) {
+    let valid = newHashMap("cid", "ok");
+
+    passport.trim().split("\n").eachLin(fn (line: string) {
+      line.split(" ").eachLin(fn (pair: string) {
+        const key = pair.split(":")[0];
+        const value = pair.split(":")[1];
+
+        if !key.getOr("").matches("cid") {
+          valid.set(key.getOr(""), value.getOr(""));
+        }
+      });
+    });
+
+    if (valid.keys().length()).eq(8) {
+      validCount = validCount + 1;
+    }
+  });
+
+  print(validCount);
 
   emit exit 0;
 }

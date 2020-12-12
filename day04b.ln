@@ -1,9 +1,59 @@
 from @std/app import start, print, exit
-from @std/http import get
+import @std/http
 
 on start {
   const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/passports.txt";
-  const lines = get(url).getOr("").split("\n");
+  const res = get(url);
+  
+  const passports = res.getOr("").split("\n\n");
+  let validCount = 0;
+
+  passports.eachLin(fn (passport: string) {
+    let valid = newHashMap("cid", "ok");
+
+    passport.trim().split("\n").eachLin(fn (line: string) {
+      line.split(" ").eachLin(fn (pair: string) {
+        const key = pair.split(":")[0];
+        const value = pair.split(":")[1];
+
+        if !key.getOr("").matches("cid") {
+          valid.set(key.getOr(""), value.getOr(""));
+        }
+      });
+    });
+
+    const byr = valid.get("byr".trim()).getOr("0").toInt64();
+    const iyr = valid.get("iyr".trim()).getOr("0").toInt64();
+    const eyr = valid.get("eyr".trim()).getOr("0").toInt64();
+    const hgt = valid.get("hgt".trim()).getOr("0");
+    const hcl = valid.get("hcl".trim()).getOr("");
+    const ecl = valid.get("ecl".trim()).getOr("");
+    const pid = valid.get("pid".trim()).getOr("");
+
+    const hgtNum = hgt.split("in")[0].getOr("0").split("cm")[0].getOr("0").toInt64();
+
+    if valid.keys().length().eq(8) &&
+    // // byr (Birth Year) - four digits; at least 1920 and at most 2002.
+    byr.gte(1920) && byr.lte(2002) &&
+    // // iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+    iyr.gte(2010) && iyr.lte(2020) &&
+    // // eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+    eyr.gte(2020) && eyr.lte(2030) &&
+    // // hgt (Height) - a number followed by either cm or in:
+    // // If cm, the number must be at least 150 and at most 193.
+    // // If in, the number must be at least 59 and at most 76.
+    ((hgt.matches("\d+cm") && hgtNum.gte(150) && hgtNum.lte(193)) ||
+    (hgt.matches("\d+in") && hgtNum.gte(59) && hgtNum.lte(76))) &&
+    // // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+    hcl.matches("\#[0-9a-f]{6}") &&
+    // // ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+    ecl.matches("(amb|blu|brn|gry|grn|hzl|oth)") &&
+    // // pid (Passport ID) - a nine-digit number, including leading zeroes.
+    pid.matches("[0-9]{9}") && pid.length().eq(9) {
+      validCount = validCount + 1;
+    } 
+  });
+  print(validCount);
 
   emit exit 0;
 }
