@@ -9,22 +9,33 @@ on start {
   const passes = res.split("\n");
 
   passes.eachLin(fn (pass: string) {
-    const letters = pass.split("");
+    // print("BOARDING PASS: " + pass);
 
-    let min = 0;
-    let max = 127;
-    let mid = 63;
+    let hashmap = newHashMap('min', 0);
+    hashmap.set('max', 127);
+    hashmap.set('mid', 63);
 
+    // This prints out of order if the const letters line is above it: multithread problem?
+    // print("min: " + hashmap.get('min').getOr(0).toString() + ", mid: " + hashmap.get('mid').getOr(0).toString() + ", max: " + hashmap.get('max').getOr(0).toString());
+
+    const letters = pass.trim().split("");
     letters.eachLin(fn (l: string) {
       const ls = l.trim();
-      print(ls);
+      const mid = hashmap.get('mid').getOr(0);
 
       if ls.eq("B".trim()) {
-        min = mid;
+        hashmap.set('min', 999);
+        wait(500);
+        const min = hashmap.get('min').getOr(500);
+        print(min.toString());
       } else if ls.eq("F".trim()) {
-        max = mid;
+        hashmap.set('max', mid);
       }
+
+      hashmap.set('mid', (hashmap.get('max').getOr(0) + hashmap.get('min').getOr(0)) / 2);
+      // print(ls + ": min: " + hashmap.get('min').getOr(0).toString() + ", mid: " + hashmap.get('mid').getOr(0).toString() + ", max: " + hashmap.get('max').getOr(0).toString());
     });
+    // print("FINAL: min: " + hashmap.get('min').getOr(0).toString() + ", mid: " + hashmap.get('mid').getOr(0).toString() + ", max: " + hashmap.get('max').getOr(0).toString() + "\n");
   });
 
   emit exit 0;
