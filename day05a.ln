@@ -1,13 +1,31 @@
 from @std/app import start, print, exit
 from @std/http import get
-from @std/seq import seq, each
 
 on start {
-  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/boarding_passes.txt";
-  const res = get(url);
+  // const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/boarding_passes.txt";
+  // const res = get(url).getOr("");
   const res = "BFFFBBFRRR \nFFFBBBFRRR \nBBFFBBFRLL";
 
-  const passes = res.getOr("").split("\n");
+  const passes = res.split("\n");
+
+  passes.eachLin(fn (pass: string) {
+    const letters = pass.split("");
+
+    let min = 0;
+    let max = 127;
+    let mid = 63;
+
+    letters.eachLin(fn (l: string) {
+      const ls = l.trim();
+      print(ls);
+
+      if ls.eq("B".trim()) {
+        min = mid;
+      } else if ls.eq("F".trim()) {
+        max = mid;
+      }
+    });
+  });
 
   emit exit 0;
 }
