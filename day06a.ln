@@ -1,0 +1,13 @@
+from @std/app import start, print, exit
+from @std/http import get
+
+on start {
+
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/customs.txt";
+  const res = get(url);
+
+  // const yesses = res.getOr("").split("\n\n");
+  const yesses = "abc\n\na\nb\nc\n\nab\nac\n\na\na\na\na\n\nb";
+
+  emit exit 0;
+}
