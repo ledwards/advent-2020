@@ -1,42 +1,69 @@
 from @std/app import start, print, exit
 from @std/http import get
 
+type Range {
+  min: int64,
+  mid: int64,
+  max: int64,
+}
+
 on start {
-  // const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/boarding_passes.txt";
-  // const res = get(url).getOr("");
-  const res = "BFFFBBFRRR \nFFFBBBFRRR \nBBFFBBFRLL";
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/boarding_passes.txt";
+  const res = get(url).getOr("");
+  // const res = "BFFFBBFRRR \nFFFBBBFRRR \nBBFFBBFRLL";
 
   const passes = res.split("\n");
 
   passes.eachLin(fn (pass: string) {
+    let rows = new Range {
+      min: 0,
+      mid: 63,
+      max: 127,
+    };
+
+    let cols = new Range {
+      min: 0,
+      mid: 3,
+      max: 7,
+    };
+
     // print("BOARDING PASS: " + pass);
-
-    let hashmap = newHashMap('min', 0);
-    hashmap.set('max', 127);
-    hashmap.set('mid', 63);
-
-    // This prints out of order if the const letters line is above it: multithread problem?
-    // print("min: " + hashmap.get('min').getOr(0).toString() + ", mid: " + hashmap.get('mid').getOr(0).toString() + ", max: " + hashmap.get('max').getOr(0).toString());
+    // print("BEGIN: min: " + rows.min.toString() + ", mid: " + rows.mid.toString() + ", max: " + rows.max.toString());
+    // print("       min: " + cols.min.toString() + ", mid: " + cols.mid.toString() + ", max: " + cols.max.toString());
 
     const letters = pass.trim().split("");
     letters.eachLin(fn (l: string) {
       const ls = l.trim();
-      const mid = hashmap.get('mid').getOr(0);
 
-      if ls.eq("B".trim()) {
-        hashmap.set('min', 999);
-        wait(500);
-        const min = hashmap.get('min').getOr(500);
-        print(min.toString());
-      } else if ls.eq("F".trim()) {
-        hashmap.set('max', mid);
+      if ls.eq("F".trim()) {
+        rows.max = rows.mid;
+      } else if ls.eq("B".trim()) {
+        rows.min = rows.mid + 1;
+      } else if ls.eq("L".trim()) {
+        cols.max = cols.mid;
+      } else if ls.eq("R".trim()) {
+        cols.min = cols.mid + 1;
       }
 
-      hashmap.set('mid', (hashmap.get('max').getOr(0) + hashmap.get('min').getOr(0)) / 2);
-      // print(ls + ": min: " + hashmap.get('min').getOr(0).toString() + ", mid: " + hashmap.get('mid').getOr(0).toString() + ", max: " + hashmap.get('max').getOr(0).toString());
+      // possible Alan bug: wrapping this in an if statement makes the assignments not work
+      rows.mid = (rows.min + rows.max) / 2;
+      cols.mid = (cols.min + cols.max) / 2;
+      // print(ls + ": min: " + rows.min.toString() + ", mid: " + rows.mid.toString() + ", max: " + rows.max.toString());
+      // print(" : min: " + cols.min.toString() + ", mid: " + cols.mid.toString() + ", max: " + cols.max.toString());
     });
-    // print("FINAL: min: " + hashmap.get('min').getOr(0).toString() + ", mid: " + hashmap.get('mid').getOr(0).toString() + ", max: " + hashmap.get('max').getOr(0).toString() + "\n");
+
+    const seatId = 8 * rows.mid + cols.mid;
+
+    // if seatId > seatIdsmax {
+    //   seatIdsmax = seatId;
+    // }
+
+    // print("Row: " + rows.mid.toString() + ", Col: " + cols.mid.toString());
+    // print("Seat ID: " + seatId.toString() + "\n");
+    print(seatId.toString()); // output each, paste to Excel, find max
   });
+
+  // print("Highest Seat ID: " + seatIdsmax.toString());
 
   emit exit 0;
 }
