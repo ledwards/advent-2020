@@ -1,0 +1,45 @@
+from @std/app import start, print, exit
+from @std/http import get
+from @std/seq import seq, each
+
+// to avoid bug with assignment inside of nested if/each
+type Counter {
+  val: int64
+}
+
+on start {
+  const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/customs.txt";
+  const res = get(url).getOr("");
+  // const res = "abc\n\na\nb\nc\n\nab\nac\n\na\na\na\na\n\nb";
+
+  const groups = res.split("\n\n");
+  let sum = 0;
+
+  groups.eachLin(fn (g: string) {
+    const respondants = g.split("\n");
+    let count = new Counter { val: 0 };
+
+    const firstResponder = respondants[0].getOr("").split("");
+    firstResponder.eachLin(fn (l: string) {
+      const letter = l.trim();
+      let s = seq(respondants.length());
+      let yesCount = new Counter { val: 0 };
+
+      s.each(fn (i: int64){
+        if respondants[i].getOr("").matches(letter) && !letter.eq("") {
+          yesCount.val = yesCount.val + 1;
+        }
+      });
+
+      if yesCount.val.eq(respondants.length()) {
+        count.val = count.val + 1;
+      }
+    });
+
+    sum = sum + count.val;
+  });
+
+  print(sum);
+
+  emit exit 0;
+}
