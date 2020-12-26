@@ -1,11 +1,72 @@
 from @std/app import start, print, exit
 from @std/http import get
+from @std/seq import seq, Self, recurse
 
 on start {
   const url = "https://raw.githubusercontent.com/ledwards/advent-2020/main/data/bags.txt";
-  // const res = get(url).getOr("");
-  const res = "light red bags contain 1 bright white bag, 2 muted yellow bags.\ndark orange bags contain 3 bright white bags, 4 muted yellow bags.\nbright white bags contain 1 shiny gold bag.\nmuted yellow bags contain 2 shiny gold bags, 9 faded blue bags.\nshiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.\ndark olive bags contain 3 faded blue bags, 4 dotted black bags.\nvibrant plum bags contain 5 faded blue bags, 6 dotted black bags.\nfaded blue bags contain no other bags.\ndotted black bags contain no other bags.";
+  const res = get(url).getOr("");
+  // const res = "light red bags contain 1 bright white bag, 2 muted yellow bags.\ndark orange bags contain 3 bright white bags, 4 muted yellow bags.\nbright white bags contain 1 shiny gold bag.\nmuted yellow bags contain 2 shiny gold bags, 9 faded blue bags.\nshiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.\ndark olive bags contain 3 faded blue bags, 4 dotted black bags.\nvibrant plum bags contain 5 faded blue bags, 6 dotted black bags.\nfaded blue bags contain no other bags.\ndotted black bags contain no other bags.";
+  const text = res.split("\n");
 
+  let rules = newHashMap("no other", new Array<string> []);
+  text.eachLin(fn (rule: string) {
+    const split1 = rule.split(" bags contain");
+    const subject = split1[0].getOr("")
+      .split("bag")[0].getOr("")
+      .split("bags")[0].getOr("")
+      .split(".")[0].getOr("")
+      .trim();
+
+    const split2 = split1[1].getOr("").trim().split(",");
+    const leftChildWords = split2[0].getOr("")
+      .split("bag")[0].getOr("")
+      .split("bags")[0].getOr("")
+      .split(".")[0].getOr("")
+      .trim()
+      .split(" ");
+    const leftChild = (leftChildWords[1].getOr("") + " " + leftChildWords[2].getOr("")).trim();
+    const rightChildWords = split2[1].getOr("")
+      .split("bag")[0].getOr("")
+      .split("bags")[0].getOr("")
+      .split(".")[0].getOr("")
+      .trim()
+      .split(" ");
+    const rightChild = (rightChildWords[1].getOr("") + " " + rightChildWords[2].getOr("")).trim();
+    
+    // TODO: remove "no other" which is showing up as "other" also
+    rules.set(subject, [leftChild, rightChild]);
+  });
+
+  // How many bag colors can eventually contain at least one shiny gold bag?
+  let count = 0;
+
+  const keys = rules.keys();
+  const subject = "shiny gold";
+
+  seq(keys.length() - 1).each(fn (n: int64) {
+
+    const found = seq(keys.length()).recurse(fn findNestedBag(self: Self, i: int64): Result<bool> {
+      const current = keys[i].getOr("");
+      const leftChild = rules.get(current).getOr(new Array<string> [])[0].getOr("");
+      const rightChild = rules.get(current).getOr(new Array<string> [])[1].getOr("");
+      const indexLeft = keys.index(leftChild).getOr(0);
+      const indexRight = keys.index(rightChild).getOr(0);
+
+      if current.trim().eq(subject.trim()) {
+        return ok(true);
+      } else if current.matches("no other") {
+        return ok(false);
+      return self.recurse(indexLeft).getOr(ok(false)) || self.recurse(indexRight).getOr(ok(false));
+    }, n + 1);
+
+    if found.getOr(false) {
+      print("n+1 = " + (n+1).toString() + ": " + keys[n + 1].getOr("fail"));
+      count = count + 1;
+    }
+
+  });
+
+  print(count - 1); // Always counts itself
 
   emit exit 0;
 }
